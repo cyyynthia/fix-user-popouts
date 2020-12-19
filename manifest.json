@@ -1,0 +1,7 @@
+{
+	"name": "Fix user popouts",
+	"description": "Fixes user popouts going off-screen when the content expands because Discord apparently is unable to do so by themselves.",
+	"version": "1.0.0",
+	"author": "Cynthia",
+	"license": "BSD-3-Clause"
+}
