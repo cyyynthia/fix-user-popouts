@@ -27,12 +27,13 @@
 
 const { Plugin } = require('powercord/entities')
 const { inject, uninject } = require('powercord/injector')
-const { React, getModuleByDisplayName } = require('powercord/webpack')
+const { React, getModule, getModuleByDisplayName } = require('powercord/webpack')
 
 const EXPECTED_MINIMUM_PADDING = 8
 
 class FixUserPopouts extends Plugin {
   async startPlugin () {
+    const userStore = await getModule([ 'getCurrentUser' ])
     const fnUserPopOut = await getModuleByDisplayName('ConnectedUserPopout')
     const owo = React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentDispatcher.current
     const ogUseMemo = owo.useMemo
@@ -47,7 +48,10 @@ class FixUserPopouts extends Plugin {
     owo.useLayoutEffect = () => null
     owo.useRef = () => ({})
 
+    const ogGetCurrentUser = userStore.getCurrentUser
+    userStore.getCurrentUser = () => ({ id: '0' })
     const UserPopOut = fnUserPopOut({ user: { isNonUserBot: () => void 0 } }).type
+    userStore.getCurrentUser = ogGetCurrentUser
 
     owo.useMemo = ogUseMemo
     owo.useState = ogUseState
@@ -55,6 +59,7 @@ class FixUserPopouts extends Plugin {
     owo.useLayoutEffect = ogUseLayoutEffect
     owo.useRef = ogUseRef
 
+    // todo: do smth better w/ ResizeObserver
     inject('fix-user-popout-render', UserPopOut.prototype, 'render', function (_, res) {
       res.props.children.ref = (p) => {
         if (!p) return
