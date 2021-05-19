@@ -41,12 +41,14 @@ class FixUserPopouts extends Plugin {
     const ogUseEffect = owo.useEffect
     const ogUseLayoutEffect = owo.useLayoutEffect
     const ogUseRef = owo.useRef
+    const ogUseCallback = owo.useCallback
 
     owo.useMemo = (f) => f()
     owo.useState = (v) => [ v, () => void 0 ]
     owo.useEffect = () => null
     owo.useLayoutEffect = () => null
     owo.useRef = () => ({})
+    owo.useCallback = (c) => c
 
     const ogGetCurrentUser = userStore.getCurrentUser
     userStore.getCurrentUser = () => ({ id: '0' })
@@ -58,6 +60,7 @@ class FixUserPopouts extends Plugin {
     owo.useEffect = ogUseEffect
     owo.useLayoutEffect = ogUseLayoutEffect
     owo.useRef = ogUseRef
+    owo.useCallback = ogUseCallback
 
     // todo: do smth better w/ ResizeObserver
     inject('fix-user-popout-render', UserPopOut.prototype, 'render', function (_, res) {
