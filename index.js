@@ -52,8 +52,12 @@ class FixUserPopouts extends Plugin {
 
     const ogGetCurrentUser = userStore.getCurrentUser
     userStore.getCurrentUser = () => ({ id: '0' })
-    const UserPopOut = fnUserPopOut({ user: { isNonUserBot: () => void 0 } }).type
-    userStore.getCurrentUser = ogGetCurrentUser
+    let UserPopOut
+    try {
+      UserPopOut = fnUserPopOut.type({ user: { isNonUserBot: () => void 0 } }).type
+    } finally {
+      userStore.getCurrentUser = ogGetCurrentUser
+    }
 
     owo.useMemo = ogUseMemo
     owo.useState = ogUseState
