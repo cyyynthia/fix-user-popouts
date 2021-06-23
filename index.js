@@ -34,7 +34,7 @@ const EXPECTED_MINIMUM_PADDING = 8
 class FixUserPopouts extends Plugin {
   async startPlugin () {
     const userStore = await getModule([ 'getCurrentUser' ])
-    const fnUserPopOut = await getModuleByDisplayName('ConnectedUserPopout')
+    const fnUserPopOut = await getModule((m) => m.type?.displayName === 'UserPopoutContainer')
     const owo = React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentDispatcher.current
     const ogUseMemo = owo.useMemo
     const ogUseState = owo.useState
